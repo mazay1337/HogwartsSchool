@@ -2,8 +2,11 @@ package ru.hogwarts.school.service;
 
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.entity.Faculty;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.entity.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.HashMap;
@@ -15,14 +18,18 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final FacultyRepository facultyRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository,
+                          FacultyRepository facultyRepository) {
         this.studentRepository = studentRepository;
+        this.facultyRepository = facultyRepository;
     }
 
 
     public Student create(Student student) {
         student.setId(null);
+        fillFaculty(student.getFaculty(), student);
         return studentRepository.save(student);
     }
 
@@ -31,6 +38,7 @@ public class StudentService {
                 .map(oldStudent -> {
                     oldStudent.setName(student.getName());
                     oldStudent.setAge(student.getAge());
+                    fillFaculty(student.getFaculty(), oldStudent);
                     return studentRepository.save(oldStudent);
                 })
                 .orElseThrow(() -> new StudentNotFoundException(id));
@@ -50,7 +58,23 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
-    public List<Student> find(int age) {
+    public List<Student> findByAge(int age) {
         return studentRepository.findByAge(age);
+    }
+
+    public List<Student> findByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    public Faculty findFaculty(long id) {
+        return get(id).getFaculty();
+    }
+
+    private void fillFaculty(Faculty faculty, Student student) {
+        if (faculty != null && faculty.getId() != null) {
+            Faculty facultyFromDb = facultyRepository.findById(faculty.getId())
+                    .orElseThrow(() -> new FacultyNotFoundException(faculty.getId()));
+            student.setFaculty(facultyFromDb);
+        }
     }
 }

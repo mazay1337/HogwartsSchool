@@ -4,11 +4,11 @@ package ru.hogwarts.school.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
-
 
 
 @Tag(name = "Студенты", description = "Эндпойнты для работы со студентами")
@@ -21,7 +21,6 @@ public class StudentController {
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
-
 
 
     @PostMapping
@@ -47,8 +46,18 @@ public class StudentController {
         return studentService.get(id);
     }
 
-    @GetMapping
-    public List<Student> find(@RequestParam int age) {
-        return studentService.find(age);
+    @GetMapping(params = "age")
+    public List<Student> findByAge(@RequestParam int age) {
+        return studentService.findByAge(age);
+    }
+
+    @GetMapping(params = {"minAge", "maxAge"})
+    public List<Student> findByAgeBetween(@RequestParam int minAge, @RequestParam int maxAge) {
+        return studentService.findByAgeBetween(minAge, maxAge);
+    }
+
+    @GetMapping("/{id}/fsculty")
+    public Faculty findFaculty(@PathVariable long id) {
+        return studentService.findFaculty(id);
     }
 }
