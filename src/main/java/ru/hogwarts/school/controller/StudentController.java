@@ -56,7 +56,7 @@ public class StudentController {
         return studentService.findByAgeBetween(minAge, maxAge);
     }
 
-    @GetMapping("/{id}/fsculty")
+    @GetMapping("/{id}/faculty")
     public Faculty findFaculty(@PathVariable long id) {
         return studentService.findFaculty(id);
     }
