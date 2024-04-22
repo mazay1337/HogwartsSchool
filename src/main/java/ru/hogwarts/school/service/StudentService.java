@@ -77,4 +77,16 @@ public class StudentService {
             student.setFaculty(facultyFromDb);
         }
     }
+
+    public int getCountOfStudents() {
+        return studentRepository.getCountOfStudents();
+    }
+
+    public double getAverageAgeOfStudents() {
+        return studentRepository.getAverageAgeOfStudents();
+    }
+
+    public List<Student> getLastNStudents(int count) {
+        return studentRepository.getLastNStudents(count);
+    }
 }
