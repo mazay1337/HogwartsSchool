@@ -1,6 +1,8 @@
 package ru.hogwarts.school.service;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
@@ -17,7 +19,6 @@ import java.util.stream.Collectors;
 public class FacultyService {
 
     private final FacultyRepository facultyRepository;
-
     private final StudentRepository studentRepository;
 
     public FacultyService(FacultyRepository facultyRepository,
@@ -59,8 +60,8 @@ public class FacultyService {
         return facultyRepository.findByColor(color);
     }
 
-    public List<Faculty> findNameOrColor(String nameOrCoplor) {
-        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(nameOrCoplor, nameOrCoplor);
+    public List<Faculty> findNameOrColor(String nameOrColor) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor, nameOrColor);
     }
 
     public List<Student> findStudents(long id) {
