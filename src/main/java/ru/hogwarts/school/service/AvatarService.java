@@ -28,12 +28,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
+
 @Service
 public class AvatarService {
 
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
     private final AvatarMapper avatarMapper;
+    private final Logger logger = LoggerFactory.getLogger(AvatarService.class);
 
     private final Path pathToAvatarsDir;
 
@@ -50,6 +52,7 @@ public class AvatarService {
 
     @PostMapping
     public void init() {
+        logger.info("method init was invoked");
         try {
             if (!Files.exists(pathToAvatarsDir) || !Files.isDirectory(pathToAvatarsDir)) {
                 Files.createDirectories(pathToAvatarsDir);
@@ -60,6 +63,7 @@ public class AvatarService {
     }
 
     public void uploadAvatar(long studentId, MultipartFile image) {
+        logger.debug("method uploadAvatar was invoked with parameters studentId ={}, image = {}", studentId, image);
         try {
             Student student = studentRepository.findById(studentId)
                     .orElseThrow(() -> new StudentNotFoundException(studentId));
@@ -83,12 +87,14 @@ public class AvatarService {
     }
 
     public Pair<byte[], String> getAvatarFromDb(long studentId) {
+        logger.debug("method getAvatarFromDb was invoked with parameter studentId ={},", studentId);
         Avatar avatar = avatarRepository.findByStudent_Id(studentId)
                 .orElseThrow(() -> new AvatarNotFoundException(studentId));
         return Pair.of(avatar.getData(), avatar.getMediaType());
     }
 
     public Pair<byte[], String> getAvatarFromFs(long studentId) {
+        logger.debug("method getAvatarFromFs was invoked with parameter studentId ={},", studentId);
         try {
             Avatar avatar = avatarRepository.findByStudent_Id(studentId)
                     .orElseThrow(() -> new AvatarNotFoundException(studentId));
@@ -100,6 +106,7 @@ public class AvatarService {
     }
 
     public List<AvatarDto> getAvatars(int page, int size) {
+        logger.debug("method getAvatars was invoked with parameters page ={}, size = {}", page, size);
         return avatarRepository.findAll(PageRequest.of(page - 1, size)).get()
                 .map(avatarMapper::toDto)
                 .collect(Collectors.toList());
