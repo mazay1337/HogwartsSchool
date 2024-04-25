@@ -76,5 +76,8 @@ public class StudentController {
         return studentService.getLastNStudents(count);
     }
 
-
+    @GetMapping("/names")
+    public List<String> getNameOfStudentsWhichStartsWith(@RequestParam char startsWith) {
+        return studentService.getNameOfStudentsWhichStartsWith(startsWith);
+    }
 }

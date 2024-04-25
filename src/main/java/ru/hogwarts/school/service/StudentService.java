@@ -4,6 +4,7 @@ package ru.hogwarts.school.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
@@ -12,7 +13,9 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -95,11 +98,23 @@ public class StudentService {
 
     public double getAverageAgeOfStudents() {
         logger.debug("method getAverageAgeOfStudents was invoked");
-        return studentRepository.getAverageAgeOfStudents();
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .summaryStatistics()
+                .getAverage();
     }
 
     public List<Student> getLastNStudents(int count) {
-        logger.debug("method getLastNStudents was invoked with parameters count ={}", count);
+        logger.debug("method getLastNStudents was invoked with parameter count ={}", count);
         return studentRepository.getLastNStudents(count);
+    }
+
+    public List<String> getNameOfStudentsWhichStartsWith(char startsWith) {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(name -> name.startsWith(Character.toString(startsWith).toUpperCase()))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
