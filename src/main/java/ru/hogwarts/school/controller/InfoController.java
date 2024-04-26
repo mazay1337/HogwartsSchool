@@ -10,7 +10,6 @@ import ru.hogwarts.school.service.InfoService;
 @RequestMapping("/info")
 public class InfoController {
 
-    @Autowired
     private final InfoService infoService;
 
     public InfoController(InfoService infoService) {
@@ -18,7 +17,12 @@ public class InfoController {
     }
 
     @GetMapping("/port")
-    public String getPort() {
-        return infoService.getCurrentPort();
+    public int getPort() {
+        return infoService.getPort();
+    }
+
+    @GetMapping("/parallel")
+    public void parallel() {
+        infoService.parallel();
     }
 }

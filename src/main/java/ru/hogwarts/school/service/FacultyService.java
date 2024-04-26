@@ -10,6 +10,7 @@ import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,5 +76,12 @@ public class FacultyService {
         logger.debug("method findStudents was invoked with parameter id ={},", id);
         Faculty faculty = get(id);
         return studentRepository.findByFaculty_Id(faculty.getId());
+    }
+
+    public String findTheLongestFacultyName() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse(null);
     }
 }
