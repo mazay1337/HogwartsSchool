@@ -80,4 +80,14 @@ public class StudentController {
     public List<String> getNameOfStudentsWhichStartsWith(@RequestParam char startsWith) {
         return studentService.getNameOfStudentsWhichStartsWith(startsWith);
     }
+
+    @GetMapping("/print-parallel")
+    public void printParallel() {
+        studentService.printParallel();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printSynchronized() {
+        studentService.printSynchronized();
+    }
 }

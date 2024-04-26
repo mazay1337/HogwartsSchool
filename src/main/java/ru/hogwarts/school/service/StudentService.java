@@ -3,6 +3,7 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.hogwarts.school.entity.Faculty;
@@ -116,5 +117,41 @@ public class StudentService {
                 .filter(name -> name.startsWith(Character.toString(startsWith).toUpperCase()))
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    public void printParallel() {
+        List<Student> students = studentRepository.findAll(PageRequest.of(0, 6)).stream().toList();
+        if (students.size() >= 6) {
+            logger.info(students.get(0).getName());
+            logger.info(students.get(1).getName());
+            new Thread(() -> {
+                logger.info(students.get(2).getName());
+                logger.info(students.get(3).getName());
+            }).start();
+            new Thread(() -> {
+                logger.info(students.get(4).getName());
+                logger.info(students.get(5).getName());
+            }).start();
+        }
+    }
+
+    public void printSynchronized() {
+        List<Student> students = studentRepository.findAll(PageRequest.of(0, 6)).stream().toList();
+        if (students.size() >= 6) {
+            print(students.get(0));
+            print(students.get(1));
+            new Thread(() -> {
+                print(students.get(2));
+                print(students.get(3));
+            }).start();
+            new Thread(() -> {
+                print(students.get(4));
+                print(students.get(5));
+            }).start();
+        }
+    }
+
+    private synchronized void print(Student student) {
+        logger.info(student.getName());
     }
 }
