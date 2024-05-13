@@ -29,11 +29,13 @@ public class StudentController {
         return studentService.create(student);
     }
 
+
     @PutMapping("/{id}")
     @Operation(summary = "Изменение студента")
     public Student update(@PathVariable long id, @RequestBody Student student) {
         return studentService.update(id, student);
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление студента")
@@ -41,22 +43,27 @@ public class StudentController {
         return studentService.delete(id);
     }
 
+
     @GetMapping("/{id}")
+    @Operation(summary = "Получение студента")
     public Student get(@PathVariable long id) {
         return studentService.get(id);
     }
 
     @GetMapping(params = "age")
+    @Operation(summary = "Нахождение студентов по возрасту")
     public List<Student> findByAge(@RequestParam int age) {
         return studentService.findByAge(age);
     }
 
     @GetMapping(params = {"minAge", "maxAge"})
+    @Operation(summary = "Нахождение студентов между возрастами")
     public List<Student> findByAgeBetween(@RequestParam int minAge, @RequestParam int maxAge) {
         return studentService.findByAgeBetween(minAge, maxAge);
     }
 
-    @GetMapping("/{id}/fsculty")
+    @GetMapping("/{id}/faculty")
+    @Operation(summary = "Нахождение факультета у студента")
     public Faculty findFaculty(@PathVariable long id) {
         return studentService.findFaculty(id);
     }

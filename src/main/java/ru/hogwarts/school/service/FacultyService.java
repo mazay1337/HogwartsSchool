@@ -59,8 +59,10 @@ public class FacultyService {
         return facultyRepository.findByColor(color);
     }
 
-    public List<Faculty> findNameOrColor(String nameOrCoplor) {
-        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(nameOrCoplor, nameOrCoplor);
+
+
+    public List<Faculty> findNameOrColor(String nameOrColor) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor, nameOrColor);
     }
 
     public List<Student> findStudents(long id) {
