@@ -27,12 +27,15 @@ public class StudentService {
     }
 
 
+    //Использовать идентификатор, чтобы понимать, что такого айди еще не было
+    //Возвращаем студента, что бы знать его айди (он нужен дальше для работы в дроугих методах)
     public Student create(Student student) {
         student.setId(null);
         fillFaculty(student.getFaculty(), student);
         return studentRepository.save(student);
     }
 
+    //Берем из мапы студента, меняем его поля и возвращаем обратно
     public Student update(long id, Student student) {
         return studentRepository.findById(id)
                 .map(oldStudent -> {
@@ -44,6 +47,7 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
+    //полезно возвращать того, кого удаляем. Везде где принимаем айди - Нотфаунд
     public Student delete(long id) {
         return studentRepository.findById(id)
                 .map(student -> {
